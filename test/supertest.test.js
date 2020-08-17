@@ -1,26 +1,35 @@
 const request = require('supertest');
-const server = "https://jsonplaceholder.typicode.com/";
+const server = "https://jsonplaceholder.typicode.com";
 
-describe('GET /user', () => {
-    it('responds with code 200', () => {
-      request(server)
-        .get('/user')
-        .set('Accept', 'application/json')
-        .expect(200);
-    });
-    
-    it('responds with json', () => {
-      request(server)
-        .get('/user')
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-    });
+describe('GET /users', () => {
 
-
-    it('responds body lenght is 10', () => {
-      request(server)
-        .get('/user')
-        .set('Accept', 'application/json')
-        .expect('Content-Length', '10')
-    });
+  it('responds with code 200', (done) => {
+    request(server)
+      .get('/users')
+      .set('Accept', 'application/json')
+      .expect(200, done)
   });
+
+  it('responds with json', (done) => {
+    request(server)
+      .get('/users')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/, done)
+  });
+
+
+  it('responds body lenght is 10', (done) => {
+    request(server)
+      .get('/users')
+      .set('Accept', 'application/json')
+      .end((err, response) => {
+        if(err){
+          return done(err);
+        }
+        else if(response.body.length != 10){
+          return done('Response body should have 10 users');
+        }
+        done();
+      })
+  });
+});
